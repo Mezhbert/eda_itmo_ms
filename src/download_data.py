@@ -4,7 +4,6 @@ import yaml
 import logging
 from tqdm import tqdm
 
-# Настройка логирования
 logging.basicConfig(
     format="%(asctime)s | %(levelname)s | %(message)s",
     level=logging.INFO
@@ -30,19 +29,20 @@ def main():
     except Exception as e:
         logging.error(f"Error reading config.yaml: {e}")
         return
-
+    
+    if not config.get("download_data", False):
+        logging.info("download_data=False или отсутствует в config.yaml. Загрузка данных не требуется.")
+        return
+    
     data_dir = config.get('data_dir', 'data')
     os.makedirs(data_dir, exist_ok=True)
 
-    exclude = {'download_data', 'data_dir'}
     files = {}
-    for k, v in config.items():
-        if k not in exclude and isinstance(v, str) and v.startswith('http'):
-            files[k] = v
-
-    # Старый формат: словарь files
-    if 'files' in config and isinstance(config['files'], dict):
-        files.update(config['files'])
+    if 'links' in config and isinstance(config['links'], dict):
+        files.update(config['links'])
+    else:
+        logging.warning("No 'links' section found in config.yaml or it is not a dictionary.")
+        return
 
     if not files:
         logging.warning("Нет файлов для скачивания в config.yaml!")

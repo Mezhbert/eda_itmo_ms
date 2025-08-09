@@ -92,12 +92,13 @@ pip install -r requirements.txt
 ```
 
 2. **Конфиг для загрузки**
-    - В корне проекта лежит файл `config.yaml`, где перечислены необходимые для анализа файлы и их ссылки.
+    - В корне проекта лежит файл `config.yaml`, где перечислены ссылки на необходимые для анализа файлы.
     - Пример содержимого:
 
 ```yaml
+download_data: True
 data_dir: data
-files:
+links:
   transaction_fraud_data: "https://..."
   historical_currency_exchange: "https://..."
 ```
